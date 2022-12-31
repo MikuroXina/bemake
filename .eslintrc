@@ -1,15 +1,15 @@
 {
-  "extends": [
-    "prettier",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
-  ],
-  "plugins": ["chakra-ui", "@typescript-eslint"],
-  "parser": "@typescript-eslint/parser",
-  "rules": {
-    "sort-imports": "error",
-    "chakra-ui/props-order": "error",
-    "chakra-ui/props-shorthand": "error",
-    "chakra-ui/require-specific-component": "error"
-  }
+    "extends": [
+        "prettier",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "plugins": ["chakra-ui", "@typescript-eslint"],
+    "parser": "@typescript-eslint/parser",
+    "rules": {
+        "sort-imports": "error",
+        "chakra-ui/props-order": "error",
+        "chakra-ui/props-shorthand": "error",
+        "chakra-ui/require-specific-component": "error"
+    }
 }
