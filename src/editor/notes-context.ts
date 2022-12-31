@@ -3,10 +3,23 @@ import { produce } from "immer";
 declare const noteIdNominal: unique symbol;
 export type NoteId = string & { [noteIdNominal]: never };
 
+export const noteLanes = [
+    "Key1",
+    "Key2",
+    "Key3",
+    "Key4",
+    "Key5",
+    "Key6",
+    "Key7",
+    "Scratch",
+    "FreeZone",
+] as const;
+export type NoteLane = typeof noteLanes[number];
+
 export interface Note {
     time: number;
     objId: number;
-    lane: number;
+    lane: NoteLane;
     selected: boolean;
 }
 
@@ -16,33 +29,35 @@ export interface State {
 
 export const initialState = (): State => ({
     notes: Object.fromEntries(
-        [
-            {
-                lane: 0,
-                objId: 1,
-                time: 1,
-            },
-            {
-                lane: 1,
-                objId: 1,
-                time: 2,
-            },
-            {
-                lane: 2,
-                objId: 2,
-                time: 3,
-            },
-            {
-                lane: 5,
-                objId: 2,
-                time: 4,
-            },
-            {
-                lane: 4,
-                objId: 4,
-                time: 5,
-            },
-        ].map((note) => [`${note.lane}${note.time}${note.objId}`, { ...note, selected: false }]),
+        (
+            [
+                {
+                    lane: "Key1",
+                    objId: 1,
+                    time: 1,
+                },
+                {
+                    lane: "Key2",
+                    objId: 1,
+                    time: 2,
+                },
+                {
+                    lane: "Key3",
+                    objId: 2,
+                    time: 3,
+                },
+                {
+                    lane: "Key6",
+                    objId: 2,
+                    time: 4,
+                },
+                {
+                    lane: "Key5",
+                    objId: 4,
+                    time: 5,
+                },
+            ] as const
+        ).map((note) => [`${note.lane}${note.time}${note.objId}`, { ...note, selected: false }]),
     ),
 });
 
@@ -58,7 +73,7 @@ const reducers = {
         produce(state, (draft) => {
             draft.notes[selected].selected = !draft.notes[selected].selected;
         }),
-    CHANGE_LANE_OF_SELECTION: (state: State, { destination }: { destination: number }) =>
+    CHANGE_LANE_OF_SELECTION: (state: State, { destination }: { destination: NoteLane }) =>
         produce(state, (draft) => {
             for (const noteId in draft.notes) {
                 const note = draft.notes[noteId as NoteId];
