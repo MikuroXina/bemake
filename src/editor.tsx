@@ -1,5 +1,5 @@
+import { MouseEvent, useEffect, useReducer } from "react";
 import { NoteId, initialState, reducer } from "./editor/notes-context.js";
-import { useEffect, useReducer } from "react";
 
 import { Preview } from "./editor/preview.jsx";
 
@@ -27,7 +27,10 @@ export const Editor = () => {
 
     const [state, dispatch] = useReducer(reducer, initialState());
 
-    const onSelectNote = (id: NoteId) => {
+    const onSelectNote = (e: MouseEvent, id: NoteId) => {
+        if (!e.metaKey) {
+            dispatch(["DESELECT_ALL", {}]);
+        }
         dispatch(["SELECT_NOTE", { selected: id }]);
     };
 

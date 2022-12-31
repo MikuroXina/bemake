@@ -47,6 +47,13 @@ export const initialState = (): State => ({
 });
 
 const reducers = {
+    DESELECT_ALL: (state: State) =>
+        produce(state, (draft) => {
+            for (const noteId in draft.notes) {
+                const note = draft.notes[noteId as NoteId];
+                note.selected = false;
+            }
+        }),
     SELECT_NOTE: (state: State, { selected }: { selected: NoteId }) =>
         produce(state, (draft) => {
             draft.notes[selected].selected = !draft.notes[selected].selected;

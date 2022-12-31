@@ -1,5 +1,5 @@
+import { MouseEvent, WheelEvent, useState } from "react";
 import { Note, NoteId } from "./notes-context.js";
-import { WheelEvent, useState } from "react";
 
 import styles from "./preview.module.css";
 
@@ -10,7 +10,7 @@ export interface ColorMap {
 export interface PreviewProps {
     notes: Record<NoteId, Note>;
     colorMap: ColorMap;
-    onSelectNote: (note: NoteId) => void;
+    onSelectNote: (e: MouseEvent, note: NoteId) => void;
 }
 
 const LANE_WIDTH = 40;
@@ -43,7 +43,7 @@ export const Preview = ({ notes, colorMap, onSelectNote }: PreviewProps) => {
                     backgroundColor: colorMap[lane] || LANE_COLOR,
                     outlineColor: selected ? SELECTION_COLOR : "transparent",
                 }}
-                onClick={() => onSelectNote(id)}
+                onClick={(e) => onSelectNote(e, id)}
             ></div>
         ),
     );
