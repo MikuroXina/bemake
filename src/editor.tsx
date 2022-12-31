@@ -28,10 +28,20 @@ export const Editor = () => {
             time: 5,
         },
     ];
+    const colorMap = {
+        0: "crimson",
+        1: "white",
+        2: "blue",
+        3: "white",
+        4: "blue",
+        5: "white",
+        6: "blue",
+        7: "white",
+    };
 
     return (
         <div>
-            <Preview notes={notes} />
+            <Preview notes={notes} colorMap={colorMap} />
         </div>
     );
 };
