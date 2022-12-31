@@ -2,6 +2,9 @@ import { WheelEvent, useState } from "react";
 
 import styles from "./preview.module.css";
 
+declare const noteIdNominal: unique symbol;
+export type NoteId = string & { [noteIdNominal]: never };
+
 export interface Note {
     time: number;
     objId: number;
@@ -13,7 +16,7 @@ export interface ColorMap {
 }
 
 export interface PreviewProps {
-    notes: Note[];
+    notes: Record<NoteId, Note>;
     colorMap: ColorMap;
 }
 
@@ -33,9 +36,9 @@ export const Preview = ({ notes, colorMap }: PreviewProps) => {
         setCurrentTime((t) => Math.max(0, t - e.deltaY * SCROLL_SPEED));
     };
 
-    const noteElements = notes.map(({ objId: id, time, lane }) => (
+    const noteElements = Object.entries(notes).map(([id, { time, lane }]) => (
         <div
-            key={`${lane}${time}${id}`}
+            key={id}
             className={styles.note}
             style={{
                 left: lane * LANE_WIDTH,
