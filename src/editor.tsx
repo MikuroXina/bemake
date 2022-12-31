@@ -1,28 +1,41 @@
 import { MouseEvent, useEffect, useReducer } from "react";
-import { NoteId, initialState, reducer } from "./editor/notes-context.js";
+import { NoteId, NoteLane, initialState, reducer } from "./editor/notes-context.js";
 
 import { Preview } from "./editor/preview.jsx";
 
 export const Editor = () => {
-    const colorMap: Record<number, string> = {
-        0: "crimson",
-        1: "white",
-        2: "blue",
-        3: "white",
-        4: "blue",
-        5: "white",
-        6: "blue",
-        7: "white",
+    const colorMap: Record<NoteLane, string> = {
+        Scratch: "crimson",
+        FreeZone: "pink",
+        Key1: "white",
+        Key2: "blue",
+        Key3: "white",
+        Key4: "blue",
+        Key5: "white",
+        Key6: "blue",
+        Key7: "white",
     };
-    const keyLaneMap: Record<string, number> = {
-        ShiftLeft: 0,
-        KeyZ: 1,
-        KeyS: 2,
-        KeyX: 3,
-        KeyD: 4,
-        KeyC: 5,
-        KeyF: 6,
-        KeyV: 7,
+    const keyLaneMap: Record<string, NoteLane> = {
+        ShiftLeft: "Scratch",
+        ControlLeft: "FreeZone",
+        KeyZ: "Key1",
+        KeyS: "Key2",
+        KeyX: "Key3",
+        KeyD: "Key4",
+        KeyC: "Key5",
+        KeyF: "Key6",
+        KeyV: "Key7",
+    };
+    const offsetMap: Record<NoteLane, number> = {
+        Scratch: 0 * 40,
+        FreeZone: 1 * 40,
+        Key1: 2 * 40,
+        Key2: 3 * 40,
+        Key3: 4 * 40,
+        Key4: 5 * 40,
+        Key5: 6 * 40,
+        Key6: 7 * 40,
+        Key7: 8 * 40,
     };
 
     const [state, dispatch] = useReducer(reducer, initialState());
@@ -49,7 +62,12 @@ export const Editor = () => {
 
     return (
         <div>
-            <Preview notes={state.notes} colorMap={colorMap} onSelectNote={onSelectNote} />
+            <Preview
+                notes={state.notes}
+                colorMap={colorMap}
+                noteLaneOffsetMap={offsetMap}
+                onSelectNote={onSelectNote}
+            />
         </div>
     );
 };
