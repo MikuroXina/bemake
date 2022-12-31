@@ -1,0 +1,11 @@
+.preview {
+    position: relative;
+    min-width: 100vw;
+    min-height: 90vh;
+    background-color: hsl(0deg 0% 10%);
+}
+
+.note {
+    position: absolute;
+    box-shadow: inset 2px 2px hsl(0deg 0% 75%);
+}
