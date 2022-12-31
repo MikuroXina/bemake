@@ -1,4 +1,4 @@
-import { Preview } from "./editor/preview.jsx";
+import { NoteId, Preview } from "./editor/preview.jsx";
 
 export const Editor = () => {
     const notes = Object.fromEntries(
@@ -28,7 +28,7 @@ export const Editor = () => {
                 objId: 4,
                 time: 5,
             },
-        ].map((note) => [`${note.lane}${note.time}${note.objId}`, note]),
+        ].map((note) => [`${note.lane}${note.time}${note.objId}`, { ...note, selected: false }]),
     );
     const colorMap = {
         0: "crimson",
@@ -41,9 +41,13 @@ export const Editor = () => {
         7: "white",
     };
 
+    const onSelectNote = (id: NoteId) => {
+        console.log("clicked", id);
+    };
+
     return (
         <div>
-            <Preview notes={notes} colorMap={colorMap} />
+            <Preview notes={notes} colorMap={colorMap} onSelectNote={onSelectNote} />
         </div>
     );
 };

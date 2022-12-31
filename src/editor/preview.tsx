@@ -9,6 +9,7 @@ export interface Note {
     time: number;
     objId: number;
     lane: number;
+    selected: boolean;
 }
 
 export interface ColorMap {
@@ -18,6 +19,7 @@ export interface ColorMap {
 export interface PreviewProps {
     notes: Record<NoteId, Note>;
     colorMap: ColorMap;
+    onSelectNote: (note: NoteId) => void;
 }
 
 const LANE_WIDTH = 40;
@@ -26,7 +28,7 @@ const NOTE_HEIGHT = 10;
 const NOTE_SPEED = 80;
 const SCROLL_SPEED = 0.01;
 
-export const Preview = ({ notes, colorMap }: PreviewProps) => {
+export const Preview = ({ notes, colorMap, onSelectNote }: PreviewProps) => {
     const [currentTime, setCurrentTime] = useState(0);
 
     const onWheel = (e: WheelEvent) => {
@@ -36,7 +38,7 @@ export const Preview = ({ notes, colorMap }: PreviewProps) => {
         setCurrentTime((t) => Math.max(0, t - e.deltaY * SCROLL_SPEED));
     };
 
-    const noteElements = Object.entries(notes).map(([id, { time, lane }]) => (
+    const noteElements = (Object.entries(notes) as [NoteId, Note][]).map(([id, { time, lane }]) => (
         <div
             key={id}
             className={styles.note}
@@ -47,6 +49,7 @@ export const Preview = ({ notes, colorMap }: PreviewProps) => {
                 height: NOTE_HEIGHT,
                 backgroundColor: colorMap[lane] || LANE_COLOR,
             }}
+            onClick={() => onSelectNote(id)}
         ></div>
     ));
 
