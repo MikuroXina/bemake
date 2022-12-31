@@ -3,7 +3,7 @@
     windows_subsystem = "windows"
 )]
 
-use tauri::{AboutMetadata, CustomMenuItem, Menu, MenuItem, Submenu};
+use tauri::{AboutMetadata, CustomMenuItem, Menu, MenuItem, Runtime, Submenu, WindowMenuEvent};
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -14,9 +14,20 @@ fn greet(name: &str) -> String {
 fn main() {
     tauri::Builder::default()
         .menu(make_menu())
+        .on_menu_event(on_menu_event)
         .invoke_handler(tauri::generate_handler![greet])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+}
+
+fn on_menu_event<R: Runtime>(e: WindowMenuEvent<R>) {
+    match e.menu_item_id() {
+        "openBMS" => e
+            .window()
+            .emit("openBMS", ())
+            .expect("failed to emit openBMS"),
+        _ => todo!(),
+    }
 }
 
 fn make_menu() -> Menu {
