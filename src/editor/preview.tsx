@@ -4,7 +4,7 @@ import styles from "./preview.module.css";
 
 export interface Note {
     time: number;
-    id: number;
+    objId: number;
     lane: number;
 }
 
@@ -33,7 +33,7 @@ export const Preview = ({ notes, colorMap }: PreviewProps) => {
         setCurrentTime((t) => Math.max(0, t - e.deltaY * SCROLL_SPEED));
     };
 
-    const noteElements = notes.map(({ id, time, lane }) => (
+    const noteElements = notes.map(({ objId: id, time, lane }) => (
         <div
             key={`${lane}${time}${id}`}
             className={styles.note}
