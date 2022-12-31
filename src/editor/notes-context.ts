@@ -51,6 +51,15 @@ const reducers = {
         produce(state, (draft) => {
             draft.notes[selected].selected = !draft.notes[selected].selected;
         }),
+    CHANGE_LANE_OF_SELECTION: (state: State, { destination }: { destination: number }) =>
+        produce(state, (draft) => {
+            for (const noteId in draft.notes) {
+                const note = draft.notes[noteId as NoteId];
+                if (note.selected) {
+                    note.lane = destination;
+                }
+            }
+        }),
 } as const;
 
 type Reducers = typeof reducers;
