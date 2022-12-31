@@ -1,35 +1,9 @@
-import { NoteId, Preview } from "./editor/preview.jsx";
+import { NoteId, initialState, reducer } from "./editor/notes-context.js";
+
+import { Preview } from "./editor/preview.jsx";
+import { useReducer } from "react";
 
 export const Editor = () => {
-    const notes = Object.fromEntries(
-        [
-            {
-                lane: 0,
-                objId: 1,
-                time: 1,
-            },
-            {
-                lane: 1,
-                objId: 1,
-                time: 2,
-            },
-            {
-                lane: 2,
-                objId: 2,
-                time: 3,
-            },
-            {
-                lane: 5,
-                objId: 2,
-                time: 4,
-            },
-            {
-                lane: 4,
-                objId: 4,
-                time: 5,
-            },
-        ].map((note) => [`${note.lane}${note.time}${note.objId}`, { ...note, selected: false }]),
-    );
     const colorMap = {
         0: "crimson",
         1: "white",
@@ -41,13 +15,15 @@ export const Editor = () => {
         7: "white",
     };
 
+    const [state, dispatch] = useReducer(reducer, initialState());
+
     const onSelectNote = (id: NoteId) => {
-        console.log("clicked", id);
+        dispatch(["SELECT_NOTE", { selected: id }]);
     };
 
     return (
         <div>
-            <Preview notes={notes} colorMap={colorMap} onSelectNote={onSelectNote} />
+            <Preview notes={state.notes} colorMap={colorMap} onSelectNote={onSelectNote} />
         </div>
     );
 };

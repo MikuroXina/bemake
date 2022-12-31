@@ -6,5 +6,6 @@
 
 .note {
     position: absolute;
+    outline: 2px solid;
     box-shadow: inset 2px 2px hsl(0deg 0% 75%);
 }
