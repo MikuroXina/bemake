@@ -110,9 +110,9 @@ dependencies = [
 
 [[package]]
 name = "bms-rs"
-version = "0.1.7"
+version = "0.1.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "007187686b72ecb101078a40c9acc4495f35e6ba1aea462d688500ae98c2a30b"
+checksum = "62f533b31a3f30279de28340ca9b4253f924753e7bcf799f6cda303f407097b4"
 dependencies = [
  "itertools",
  "serde",
