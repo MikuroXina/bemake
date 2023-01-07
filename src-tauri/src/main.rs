@@ -3,10 +3,13 @@
     windows_subsystem = "windows"
 )]
 
+use std::{fs, path::Path};
+
 use bms_rs::{
     lex::parse,
     parse::{rng::RngMock, Bms},
 };
+use encoding_rs::SHIFT_JIS;
 use tauri::{
     api::dialog::{message, FileDialogBuilder},
     AboutMetadata, CustomMenuItem, Menu, MenuItem, Runtime, Submenu, WindowMenuEvent,
@@ -36,9 +39,8 @@ fn on_menu_event<R: Runtime>(e: WindowMenuEvent<R>) {
                 .add_filter("BMS file", &["bms", "bme", "bml", "pms"])
                 .pick_file(move |file_path| {
                     let Some(file_path) = file_path else { return; };
-                    eprintln!("{:?}", file_path);
-                    let source = match std::fs::read_to_string(file_path) {
-                        Ok(src) => src,
+                    let source = match open_bms(&file_path) {
+                        Ok(value) => value,
                         Err(err) => {
                             message(
                                 Some(&window),
@@ -62,6 +64,16 @@ fn on_menu_event<R: Runtime>(e: WindowMenuEvent<R>) {
         }
         _ => todo!(),
     }
+}
+
+fn open_bms(file_path: &Path) -> anyhow::Result<String> {
+    eprintln!("{:?}", file_path);
+    let bytes = fs::read(file_path)?;
+    let string = match SHIFT_JIS.decode(&bytes) {
+        (decoded, _, false) => decoded.into_owned(),
+        (_, _, true) => String::from_utf8(bytes)?,
+    };
+    Ok(string)
 }
 
 fn make_menu() -> Menu {
