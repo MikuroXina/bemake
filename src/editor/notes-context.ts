@@ -1,6 +1,6 @@
-import type { Chart } from "../chart.js";
+import type { Chart } from "./file/chart.js";
 import { produce } from "immer";
-import { stateFromChart } from "../convert.js";
+import { stateFromChart } from "./file/convert.js";
 
 declare const noteIdNominal: unique symbol;
 export type NoteId = string & { [noteIdNominal]: never };
@@ -16,7 +16,7 @@ export const noteLanes = [
     "Scratch",
     "FreeZone",
 ] as const;
-export type NoteLane = typeof noteLanes[number];
+export type NoteLane = (typeof noteLanes)[number];
 
 export interface Note {
     time: number;

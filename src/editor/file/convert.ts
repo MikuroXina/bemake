@@ -1,4 +1,4 @@
-import type { Note, NoteId, State } from "./editor/notes-context.js";
+import type { Note, NoteId, State } from "../notes-context.js";
 
 import type { Chart } from "./chart.js";
 import { NoteTimeCalculator } from "./note-time.js";

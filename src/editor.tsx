@@ -2,7 +2,7 @@ import { MouseEvent, useEffect, useReducer } from "react";
 import { NoteId, NoteLane, State, reducer } from "./editor/notes-context.js";
 
 import { Preview } from "./editor/preview.jsx";
-import { useOpenFile } from "./file/open.js";
+import { useOpenFile } from "./editor/file/open.js";
 
 export interface EditorProps {
     defaultState: State;

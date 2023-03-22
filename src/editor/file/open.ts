@@ -1,7 +1,7 @@
 import { Dispatch, useEffect } from "react";
 
-import type { Action } from "../editor/notes-context.js";
-import type { Chart } from "../chart.js";
+import type { Action } from "../notes-context.js";
+import type { Chart } from "./chart.js";
 import { listen } from "@tauri-apps/api/event";
 
 export const useOpenFile = (dispatch: Dispatch<Action>) => {
