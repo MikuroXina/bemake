@@ -2,6 +2,7 @@ import { MouseEvent, useEffect, useReducer } from "react";
 import { NoteId, NoteLane, State, reducer } from "./editor/notes-context.js";
 
 import { Preview } from "./editor/preview.jsx";
+import { useOpenFile } from "./file/open.js";
 
 export interface EditorProps {
     defaultState: State;
@@ -43,6 +44,7 @@ export const Editor = ({ defaultState }: EditorProps) => {
     };
 
     const [state, dispatch] = useReducer(reducer, defaultState);
+    useOpenFile(dispatch);
 
     const onSelectNote = (e: MouseEvent, id: NoteId) => {
         if (!e.metaKey) {
