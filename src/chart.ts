@@ -11,6 +11,8 @@ export interface ObjTime {
     numerator: number;
     denominator: number;
 }
+export const toNumber = ({ track, numerator, denominator }: ObjTime): number =>
+    track + numerator / denominator;
 
 export interface Header {
     title: string;
@@ -18,7 +20,7 @@ export interface Header {
     back_bmp: string | null;
     banner: string | null;
     bmp_files: Record<ObjId, BmpFile>;
-    bpm: number;
+    bpm: number | null;
     bpm_changes: Record<ObjId, number>;
     change_options: Record<ObjId, string>;
     comment: string | null;
@@ -75,6 +77,6 @@ export interface BpmChangeObj {
 }
 
 export interface SectionLenChangeObj {
-    time: ObjTime;
+    track: number;
     length: number;
 }
