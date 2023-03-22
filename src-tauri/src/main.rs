@@ -3,7 +3,17 @@
     windows_subsystem = "windows"
 )]
 
-use tauri::{AboutMetadata, CustomMenuItem, Menu, MenuItem, Runtime, Submenu, WindowMenuEvent};
+use std::{fs, path::Path};
+
+use bms_rs::{
+    lex::parse,
+    parse::{rng::RngMock, Bms},
+};
+use encoding_rs::SHIFT_JIS;
+use tauri::{
+    api::dialog::{message, FileDialogBuilder},
+    AboutMetadata, CustomMenuItem, Menu, MenuItem, Runtime, Submenu, WindowMenuEvent,
+};
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -22,12 +32,48 @@ fn main() {
 
 fn on_menu_event<R: Runtime>(e: WindowMenuEvent<R>) {
     match e.menu_item_id() {
-        "openBMS" => e
-            .window()
-            .emit("openBMS", ())
-            .expect("failed to emit openBMS"),
+        "openBMS" => {
+            let window = e.window().clone();
+            FileDialogBuilder::new()
+                .set_title("Open a BMS file...")
+                .add_filter("BMS file", &["bms", "bme", "bml", "pms"])
+                .pick_file(move |file_path| {
+                    let Some(file_path) = file_path else { return; };
+                    let source = match open_bms(&file_path) {
+                        Ok(value) => value,
+                        Err(err) => {
+                            message(
+                                Some(&window),
+                                "Failure",
+                                format!("Failed to open a BMS file\n{:?}", err),
+                            );
+                            return;
+                        }
+                    };
+                    let Ok(token_stream) = parse(&source) else {
+                        message(Some(&window), "Failure", "Failed to parse as a BMS file");
+                        return;
+                    };
+                    let rng = RngMock([1]);
+                    let bms = Bms::from_token_stream(&token_stream, rng).expect("must be parsed");
+
+                    window
+                        .emit("openBMS", &bms)
+                        .expect("failed to emit openBMS")
+                });
+        }
         _ => todo!(),
     }
+}
+
+fn open_bms(file_path: &Path) -> anyhow::Result<String> {
+    eprintln!("{:?}", file_path);
+    let bytes = fs::read(file_path)?;
+    let string = match SHIFT_JIS.decode(&bytes) {
+        (decoded, _, false) => decoded.into_owned(),
+        (_, _, true) => String::from_utf8(bytes)?,
+    };
+    Ok(string)
 }
 
 fn make_menu() -> Menu {
@@ -43,7 +89,7 @@ fn make_menu() -> Menu {
                 .add_native_item(MenuItem::Separator)
                 .add_item(CustomMenuItem::new("newBMS", "New BMS"))
                 .add_native_item(MenuItem::Separator)
-                .add_item(CustomMenuItem::new("openBMS", "Open BMS..."))
+                .add_item(CustomMenuItem::new("openBMS", "Open BMS...").accelerator("CmdOrCtrl+O"))
                 .add_native_item(MenuItem::Separator)
                 .add_item(CustomMenuItem::new("save", "Save"))
                 .add_item(CustomMenuItem::new("saveAs", "Save As..."))

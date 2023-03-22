@@ -1,11 +1,8 @@
-import { StrictMode, useEffect } from "react";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 
-import { ChakraProvider } from "@chakra-ui/react";
 import { Editor } from "./editor.jsx";
-import { extendTheme } from "@chakra-ui/react";
-import { listen } from "@tauri-apps/api/event";
-import { open } from "@tauri-apps/api/dialog";
-import { readTextFile } from "@tauri-apps/api/fs";
+import { StrictMode } from "react";
+import { initialState } from "./editor/notes-context.js";
 import styles from "./index.module.css";
 
 const theme = extendTheme({
@@ -25,34 +22,12 @@ const theme = extendTheme({
     },
 });
 
-export const index = () => {
-    useEffect(() => {
-        const openBMSHandler = async () => {
-            const selected = await open({
-                filters: [
-                    {
-                        name: "BMS file",
-                        extensions: ["bms", "bml", "bme", "pms"],
-                    },
-                ],
-            });
-            if (!selected || Array.isArray(selected)) {
-                return;
-            }
-            const bmsText = await readTextFile(selected);
-            console.log("opened BMS file at:", selected);
-        };
-        const unsubscribe = listen("openBMS", openBMSHandler);
-        return () => {
-            unsubscribe.then((fn) => fn());
-        };
-    }, []);
-
+export const Index = () => {
     return (
         <StrictMode>
             <ChakraProvider theme={theme}>
                 <div className={styles.container}>
-                    <Editor />
+                    <Editor defaultState={initialState()} />
                 </div>
             </ChakraProvider>
         </StrictMode>

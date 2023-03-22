@@ -1,4 +1,6 @@
+import type { Chart } from "../chart.js";
 import { produce } from "immer";
+import { stateFromChart } from "../convert.js";
 
 declare const noteIdNominal: unique symbol;
 export type NoteId = string & { [noteIdNominal]: never };
@@ -82,6 +84,7 @@ const reducers = {
                 }
             }
         }),
+    OPEN_FILE: (_state: State, { chart }: { chart: Chart }) => stateFromChart(chart),
 } as const;
 
 type Reducers = typeof reducers;

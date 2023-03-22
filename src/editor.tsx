@@ -1,9 +1,14 @@
 import { MouseEvent, useEffect, useReducer } from "react";
-import { NoteId, NoteLane, initialState, reducer } from "./editor/notes-context.js";
+import { NoteId, NoteLane, State, reducer } from "./editor/notes-context.js";
 
 import { Preview } from "./editor/preview.jsx";
+import { useOpenFile } from "./file/open.js";
 
-export const Editor = () => {
+export interface EditorProps {
+    defaultState: State;
+}
+
+export const Editor = ({ defaultState }: EditorProps) => {
     const colorMap: Record<NoteLane, string> = {
         Scratch: "crimson",
         FreeZone: "pink",
@@ -38,7 +43,8 @@ export const Editor = () => {
         Key7: 8 * 40,
     };
 
-    const [state, dispatch] = useReducer(reducer, initialState());
+    const [state, dispatch] = useReducer(reducer, defaultState);
+    useOpenFile(dispatch);
 
     const onSelectNote = (e: MouseEvent, id: NoteId) => {
         if (!e.metaKey) {
